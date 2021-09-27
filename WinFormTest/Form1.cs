@@ -51,5 +51,9 @@ namespace WinFormTest {
             await Task.Delay(3000);
             Text = $"Thread.Sleep(3000), {DateTime.Now}";
         }
+
+        private void button3_Click(object sender, EventArgs e) {
+            Console.WriteLine("Hello Console!");
+        }
     }
 }
