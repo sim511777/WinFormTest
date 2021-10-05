@@ -55,5 +55,62 @@ namespace WinFormTest {
         private void button3_Click(object sender, EventArgs e) {
             Console.WriteLine("Hello Console!");
         }
+
+        void ReLayout() {
+            panel2.Controls.Clear();
+            if (chkTabOrGrid.Checked) {
+                var tab = new TabControl();
+                tab.Dock = DockStyle.Fill;
+
+                for (int i = 0; i < views.Count; i++) {
+                    var tpg = new TabPage();
+                    tpg.Name = i.ToString();
+                    tpg.Text = i.ToString();
+                    tpg.Controls.Add(views[i]);
+
+                    tab.TabPages.Add(tpg);
+                }
+
+                panel2.Controls.Add(tab);
+            } else {
+                var pnl = new TableLayoutPanel();
+                pnl.Dock = DockStyle.Fill;
+
+                pnl.RowCount = 1;
+                pnl.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+
+                pnl.ColumnCount = views.Count;
+                for (int i = 0; i < views.Count; i++) {
+                    pnl.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+                    pnl.Controls.Add(views[i]);
+                }
+
+                panel2.Controls.Add(pnl);
+            }
+        }
+
+        List<Control> views = new List<Control>();
+
+        private void btnAdd_Click(object sender, EventArgs e) {
+            var tbx = new TextBox();
+            tbx.Multiline = true;
+            tbx.WordWrap = false;
+            tbx.ScrollBars = ScrollBars.Both;
+            tbx.Dock = DockStyle.Fill;
+            tbx.Text = DateTime.Now.ToString();
+            views.Add(tbx);
+            ReLayout();
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e) {
+            if (views.Count == 0)
+                return;
+            views.Remove(views.Last());
+            ReLayout();
+        }
+
+        private void chkTabOrGrid_CheckedChanged(object sender, EventArgs e) {
+            ReLayout();
+        }
     }
 }
