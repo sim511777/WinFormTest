@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -111,6 +112,60 @@ namespace WinFormTest {
 
         private void chkTabOrGrid_CheckedChanged(object sender, EventArgs e) {
             ReLayout();
+        }
+
+        List<Student> studentList = new List<Student>();
+        BindingSource bindingSource = new BindingSource();
+
+        private void Form1_Load(object sender, EventArgs e) {
+            //this.dataGridView1.DataSource = this.studentList;
+            this.bindingSource.DataSource = this.studentList;
+            this.dataGridView1.DataSource = bindingSource;
+            bindingSource.ListChanged += BindingSource_ListChanged;
+
+            studentList.Add(new Student("Tom", 17, 33.2, false));
+            studentList.Add(new Student("Sara", 19, 53.4, true));
+            studentList.Add(new Student("홍길동", 15, 130.2, false));
+            studentList.Add(new Student("이순신", 16, 43.2, true));
+            studentList.Add(new Student("Ace", 15, 23.2, false));
+        }
+
+        private void BindingSource_ListChanged(object sender, ListChangedEventArgs e) {
+            PrintData();
+        }
+
+        private void btnAddData_Click(object sender, EventArgs e) {
+            Student std = new Student("추가1", 22, 11.33, false);
+            //studentList.Add(std); // binding 후에는, List 에 바로 추가시 DataGridView 에는 반영안됨.
+            bindingSource.Add(std); // DataGridView 반영되고, binding 된 List 에도 추가됨.
+        }
+
+        private void btnDebug_Click(object sender, EventArgs e) {
+            PrintData();
+        }
+
+        private void PrintData() {
+            Debug.WriteLine(DateTime.Now.ToString());
+            foreach (Student student in studentList) {
+                Debug.WriteLine(student);
+            }
+            Debug.WriteLine("----------------------------------------------------------");
+        }
+    }
+    class Student {
+        public string Name { get; }
+        public int Age { get; set; }
+        public double Weight { get; set; }
+        public bool Glass { get; set; } = false;
+        // 안경끼면, true
+        public Student(string name, int age, double weight, bool glass) {
+            this.Name = name;
+            this.Age = age;
+            this.Weight = weight;
+            this.Glass = glass;
+        }
+        public override string ToString() {
+            return $"-- Name={Name},\t Age={Age}, 몸무게={Weight}, \t 안경착용={Glass}--";
         }
     }
 }
