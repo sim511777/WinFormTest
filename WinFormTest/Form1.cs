@@ -77,7 +77,6 @@ namespace WinFormTest {
                 pnl.Dock = DockStyle.Fill;
 
                 pnl.RowCount = 1;
-                pnl.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
 
                 pnl.ColumnCount = views.Count;
                 for (int i = 0; i < views.Count; i++) {
